@@ -1,30 +1,62 @@
-import wxtLogo from '/wxt.svg';
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 
-import reactLogo from '@/assets/react.svg';
+import type { TabResult } from './types';
 
 import './App.css';
+import { scanTabs } from './helpers';
+import TabTable from './TabTable';
+
+const openTab = async ({ windowId, id }: TabResult) => {
+    // 2. Focus the window containing the tab
+    await browser.windows.update(windowId, { focused: true });
+    // 3. Switch to the tab
+    await browser.tabs.update(id, { active: true });
+}
+
+const closeTab = async ({ id }: TabResult) => {
+    await browser.tabs.remove(id);
+}
 
 function App() {
-  const [count, setCount] = useState(0);
-
+  const [tabs, setTabs] = useState<TabResult[]>([]);
+  const [isScanning, setIsScanning] = useState(false);
+  const [tabsScanned, setTabsScanned] = useState(0);
+  const [tabsCount, setTabsCount] = useState(0);
+  const doScanTabs = useCallback(async () => {
+    setIsScanning(true);
+    try {
+      setTabs(await scanTabs(setTabsCount, setTabsScanned));
+    } finally {
+      setIsScanning(false);
+    }
+  }, [setTabs, setIsScanning, setTabsCount, setTabsScanned])
+  const doCloseTab = useCallback(async (tab: TabResult) => {
+    setTabs(tabs.filter(t => t.id !== tab.id))
+    await closeTab(tab);
+  });
   return (
     <>
-      <div>
-        <a href="https://wxt.dev" target="_blank">
-          <img src={wxtLogo} className="logo" alt="WXT logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>WXT + React</h1>
+      <h1>Tab Cleanup</h1>
+      <button onClick={doScanTabs} disabled={isScanning}>
+        Scan Tabs
+      </button>
+      {isScanning && (
+        <div>
+          Scanning ({tabsScanned}/{tabsCount})...
+        </div>
+      )}
+
+      {tabs.length > 0 && !isScanning && (
+        <TabTable
+          tabs={tabs}
+          onCloseTab={doCloseTab}
+          onOpenTab={openTab}
+        />
+      )}
+
       <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
         <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
+          Edit <code>entrypoint/sorter/App.tsx</code> and save to test HMR
         </p>
       </div>
     </>

@@ -5,6 +5,7 @@
   "description": "manifest.json description",
   "type": "module",
   "scripts": {
+    "test": "vitest",
     "dev": "wxt",
     "dev:firefox": "wxt -b firefox",
     "build": "wxt build",
@@ -16,7 +17,8 @@
   },
   "dependencies": {
     "react": "^19.2.4",
-    "react-dom": "^19.2.4"
+    "react-dom": "^19.2.4",
+    "vitest": "^5.1.0"
   },
   "devDependencies": {
     "@types/react": "^19.2.14",

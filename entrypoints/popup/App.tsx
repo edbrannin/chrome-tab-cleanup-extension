@@ -18,7 +18,7 @@ function App() {
       </div>
       <div className="card">
         <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
+          Edit <code>entrypoint/popup/App.tsx</code> and save to test HMR
         </p>
       </div>
       <p className="read-the-docs">

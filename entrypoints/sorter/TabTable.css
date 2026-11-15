@@ -1,0 +1,16 @@
+table {
+    table-layout: auto;
+    width: 100%;
+}
+
+table th.title,
+table th.url,
+table td.title,
+table td.url {
+    max-width: 40em;
+    overflow-wrap: break-word
+}
+
+table th.url {
+    font-family: 'Maple Mono NF CN', 'Courier New', Courier, monospace;
+}
