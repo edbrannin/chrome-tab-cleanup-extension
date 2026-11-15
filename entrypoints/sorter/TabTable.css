@@ -14,3 +14,11 @@ table td.url {
 table th.url {
     font-family: 'Maple Mono NF CN', 'Courier New', Courier, monospace;
 }
+
+table tbody tr:hover {
+    background-color: light-dark(#AAF, #009);
+}
+
+tr.new-window td {
+    border-top: 1px solid light-dark(gray, gray);
+}

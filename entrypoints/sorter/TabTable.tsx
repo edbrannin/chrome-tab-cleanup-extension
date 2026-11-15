@@ -22,15 +22,15 @@ const filterTab = (tab: TabResult, text: string) => {
 }
 
 const TabTable: FC<TabTableProps> = ({ tabs, onCloseTab, onOpenTab }) => {
-  const [filterText, setFilterText] = useState('');
+  const [filterText, setFilterText] = useState("");
 
-  const visibleTabs = tabs.filter((tab) => filterTab(tab, filterText))
+  const visibleTabs = tabs.filter((tab) => filterTab(tab, filterText));
   return (
     <div>
       <div>
-        {visibleTabs.length !== tabs.length && `${visibleTabs.length} /`}{tabs.length} tabs
-        in {' '}
-        {tabs[tabs.length - 1]?.window} windows</div>
+        {visibleTabs.length !== tabs.length && `${visibleTabs.length} /`}
+        {tabs.length} tabs in {tabs[tabs.length - 1]?.window} windows
+      </div>
       <div>
         Filter:
         <input
@@ -51,16 +51,24 @@ const TabTable: FC<TabTableProps> = ({ tabs, onCloseTab, onOpenTab }) => {
           </tr>
         </thead>
         <tbody>
-          {tabs
-            .filter((tab) => filterTab(tab, filterText))
-            .map((tab) => (
-              <tr key={tab.id}>
+          {visibleTabs
+            .map((tab, i) => (
+              <tr key={tab.id} className={tab.window !== visibleTabs[i-1]?.window && 'new-window' || ''}>
                 <td>{tab.window}</td>
                 <td>
                   <button onClick={() => onOpenTab(tab)}>Open</button>
                 </td>
                 <td className="title">{tab.title}</td>
-                <td className="url">{tab.url}</td>
+                <td className="url">
+                  {tab.isCleanLink ? (
+                    tab.url
+                  ) : (
+                    <details name="Full URL">
+                      <summary>{tab.cleanedLink}</summary>
+                      {tab.url}
+                    </details>
+                  )}
+                </td>
                 <td>{tab.isDiscarded && "discarded"}</td>
                 {/* <td>{tab.dirty}</td> */}
                 <td>

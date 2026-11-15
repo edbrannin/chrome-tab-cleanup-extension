@@ -19,6 +19,8 @@ export type TabResult = {
   isDiscarded: Boolean;
   isInternal: Boolean;
   dirty: Dirty;
+  cleanedLink: string;
+  isCleanLink: Boolean;
 }
 
 export type ValueCallback<I, O=void> = (input: I) => O;

@@ -3,6 +3,9 @@ import { browser } from 'wxt/browser';
 import type { Tab, TabResult, ValueCallback } from './types'
 import { Dirty } from './types'
 
+import * as linkCleaner from "link-cleaner-js";
+
+
 // Function injected into each tab to check for dirty forms
 const hasUnsavedFormInput = () => {
   const inputs = document.querySelectorAll('input, textarea, select');
@@ -57,14 +60,36 @@ export const getTitle = ({ title, url }: Pick<Tab, 'title' | 'url'>): string => 
   if (!title) {
     return "(N/A)";
   }
+
+  const parsedUrl = URL.parse(url || '');
   if (url?.includes('google.com') && url.includes('q=')) {
-    const query = URL.parse(url)?.searchParams.get('q');
+    const query = parsedUrl?.searchParams.get('q');
     return `Google: ${query}`
   }
+
+  const redirect = ["returnTo", "redirect_uri"]
+    .map((p) => parsedUrl?.searchParams.get(p))
+    .filter(x => x)
+    .map(destination => `${title} -> ${destination}`);
+  if (redirect.length > 0) {
+    return redirect[0] || title;
+  }
+
+  // SAML
+  const relayState = parsedUrl?.searchParams.get('RelayState');
+  if (relayState) {
+    const relayUrl = URL.parse(relayState);
+    const cont = relayUrl?.searchParams.get('continue');
+    if (cont) {
+      return `${title} -> ${cont}`
+    }
+  }
+
   const decodedUrl = decodeURI(url || '').replace(/^https?:\/\/(www\.)?/, '')
   if (title === decodedUrl) {
     return "(URL)";
   }
+
   return title;
 }
 
@@ -105,6 +130,9 @@ export const scanTabs = async (
     const dirty = Dirty.NO_SCRIPT;
     const title = getTitle(tab);
 
+    const cleanedLink = linkCleaner.clean(url).toString();
+    const isCleanLink = cleanedLink === url;
+
     result.push({
       tab,
       window: getWindowIndex(tab.windowId),
@@ -115,6 +143,8 @@ export const scanTabs = async (
       isDiscarded,
       isInternal,
       dirty,
+      isCleanLink,
+      cleanedLink,
     })
     onTabProgress?.(result.length);
   }
