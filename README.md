@@ -4,7 +4,7 @@ If you have _way_ too many open browser tabs, this extension can help review & c
 
 ## Screenshots
 
-TODO
+![A screenshot of the tab sorter page](screenshot.png)
 
 ## Why trust me?
 
