@@ -30,10 +30,14 @@ function App() {
       setIsScanning(false);
     }
   }, [setTabs, setIsScanning, setTabsCount, setTabsScanned])
+  useEffect(() => {
+    // Scan tabs automatically on first load
+    doScanTabs()
+  }, []);
   const doCloseTab = useCallback(async (tab: TabResult) => {
     setTabs(tabs.filter(t => t.id !== tab.id))
     await closeTab(tab);
-  });
+  }, [tabs]);
   return (
     <>
       <h1>Tab Cleanup</h1>
