@@ -25,7 +25,7 @@ jobs:
         version: 12.21.0
         cache: true
     - run: pnpm ci
-    - run: pnpm run build --if-present
+    - run: pnpm run build
     - run: pnpm test
     - run: |
         pnpm run zip
