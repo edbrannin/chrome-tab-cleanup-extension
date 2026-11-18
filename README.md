@@ -11,3 +11,13 @@ TODO
 I don't know, I'm just some guy with way too many open browser tabs.
 
 Feel free to make your own version of this if you want. That's what I did.
+
+## Development
+
+Run in terminal:
+```
+pnpm ci
+pnpm run dev
+```
+
+In Chrome's Extension Settings, enable Developer Mode and Load .output/chrome-mv3-dev as an unpacked extension.
