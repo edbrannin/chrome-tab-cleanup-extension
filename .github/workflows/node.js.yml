@@ -33,31 +33,31 @@ jobs:
       id: version
       run: |
         VERSION=$(jq .version package.json)
-        echo "VERSION=${VERSION}" >> $GITHUB_OUTPUT
-        echo "BASE_NAME=tab-cleanup-extension-${VERSION}" >> $GITHUB_OUTPUT
+        echo "VERSION=${VERSION}" >> $GITHUB_ENV
+        echo "BASE_NAME=tab-cleanup-extension-${VERSION}" >> $GITHUB_ENV
     - name: Upload built artifacts
       uses: actions/upload-artifact@v7.0.2
       with:
         # Artifact name. If the `archive` input is `false`, the name of the file uploaded will be the artifact name.
-        name: ${{ steps.version.BASE_NAME }}-chrome.zip
+        name: ${{ env.BASE_NAME }}-chrome.zip
         # A file, directory or wildcard pattern that describes what to upload.
-        path: .output/${{ steps.version.BASE_NAME }}-chrome.zip
+        path: .output/${{ env.BASE_NAME }}-chrome.zip
         include-hidden-files: true
     - name: Upload built artifacts
       uses: actions/upload-artifact@v7.0.2
       with:
         # Artifact name. If the `archive` input is `false`, the name of the file uploaded will be the artifact name.
-        name: ${{ steps.version.BASE_NAME }}-firefox.zip
+        name: ${{ env.BASE_NAME }}-firefox.zip
         # A file, directory or wildcard pattern that describes what to upload.
-        path: .output/${{ steps.version.BASE_NAME }}-firefox.zip
+        path: .output/${{ env.BASE_NAME }}-firefox.zip
         include-hidden-files: true
     - name: Upload built artifacts
       uses: actions/upload-artifact@v7.0.2
       with:
         # Artifact name. If the `archive` input is `false`, the name of the file uploaded will be the artifact name.
-        name: ${{ steps.version.BASE_NAME }}-sources.zip
+        name: ${{ env.BASE_NAME }}-sources.zip
         # A file, directory or wildcard pattern that describes what to upload.
-        path: .output/${{ steps.version.BASE_NAME }}-sources.zip
+        path: .output/${{ env.BASE_NAME }}-sources.zip
         include-hidden-files: true
     #- name: GitHub Release
     #  if: github.event_name == 'push'
