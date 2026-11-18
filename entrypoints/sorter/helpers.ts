@@ -85,8 +85,17 @@ export const getTitle = ({ title, url }: Pick<Tab, 'title' | 'url'>): string => 
     }
   }
 
+  // GMail
+  if (parsedUrl?.hash.includes('#search/')) {
+    console.log('Gmail search, hash:', parsedUrl.hash);
+    const { hash } = parsedUrl;
+    const query = decodeURIComponent(hash.substring('#search/'.length).replaceAll(/\/.*/g, '').replaceAll('+', ' '));
+    return `${title} - search: ${query}`
+  }
+
   const decodedUrl = decodeURI(url || '').replace(/^https?:\/\/(www\.)?/, '')
-  if (title === decodedUrl) {
+  const normalizedTitle = title.replace(/^https?:\/\/(www\.)?/, '')
+  if (normalizedTitle === decodedUrl) {
     return "(URL)";
   }
 
