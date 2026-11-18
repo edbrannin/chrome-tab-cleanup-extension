@@ -57,12 +57,6 @@ function App() {
           onOpenTab={openTab}
         />
       )}
-
-      <div className="card">
-        <p>
-          Edit <code>entrypoint/sorter/App.tsx</code> and save to test HMR
-        </p>
-      </div>
     </>
   );
 }
